@@ -17,11 +17,9 @@ import com.stuypulse.stuylib.network.SmartNumber;
 public interface Settings {
 
     public interface Shooter {
-        Number MAX_ERROR = new SmartNumber("Shooter/Max RPM Error", 200);
     }
 
     public interface Elevator {
-        
     }
 
 }

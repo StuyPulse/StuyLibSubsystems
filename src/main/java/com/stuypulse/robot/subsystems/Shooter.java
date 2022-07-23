@@ -34,16 +34,9 @@ public class Shooter extends SubsystemBase {
     private final Motor motor;
 
     public Shooter() {
-        /**
-         * Combines both PID Controller and flywheel Feed Forward together.
-         * 
-         * The controller additionally allows the setpoints (and measurement / outputs) to be filtered.
-         * Here there is a RateLimit, which sets a maximum change in target rpm over a second.
-         * There is also a LowPassFilter, which smooths out the Target RPM to prevent the RPM from constantly changing.
-         */
         controller = new PIDController(1.0, 0.0, 0.0)
-            .and(new Feedforward.Flywheel(0.1, 0.01, 0.01).velocity())
-            .setSetpointFilter(new RateLimit(1000).then(new LowPassFilter(0.2)));
+            .add(new Feedforward.Flywheel(0.1, 0.01, 0.01).velocity())
+            .setSetpointFilter(new RateLimit(1000), new LowPassFilter(0.2));
 
         motor = new Motor();
         setpoint = new SmartNumber("Shooter/Setpoint (rpm)", 0.0);
@@ -51,15 +44,9 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (controller.isDone(MAX_ERROR.doubleValue())) {
-            /** If the controller is within an acceptable error, we can stop the motor. */
-            motor.stop();
-        } else {
-            /** Calculates the next output of the controller. */
-            double output = controller.update(setpoint.doubleValue(), motor.getVelocity());
-            motor.set(output);
-        }
-        
+        double output = controller.update(setpoint.doubleValue(), motor.getVelocity());
+        motor.set(output);
+    
         /** Displays the current Motor RPM onto SmartDashboard with filtering */
         SmartDashboard.putNumber("Shooter/Measurement (rpm)", controller.getMeasurement());
         // NOTE: it is best to read the measurement from the controller because there may be filters applied 
