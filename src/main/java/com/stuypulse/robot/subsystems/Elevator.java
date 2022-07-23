@@ -44,7 +44,6 @@ public class Elevator extends SubsystemBase {
             .setSetpointFilter(new MotionProfile(1, 20.0));
 
         motor = new Motor();
-
         setpoint = new SmartNumber("Elevator/Setpoint (meters)", 0.0);
     }
 
