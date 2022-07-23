@@ -1,5 +1,7 @@
 package com.stuypulse.robot.util;
 
+import com.stuypulse.stuylib.math.Angle;
+
 public class Motor {
     
     public Motor() {
@@ -20,5 +22,9 @@ public class Motor {
 
     public double getVelocity() {
         return 0;
+    }
+
+    public Angle getAngle() {
+        return Angle.kZero;
     }
 }
