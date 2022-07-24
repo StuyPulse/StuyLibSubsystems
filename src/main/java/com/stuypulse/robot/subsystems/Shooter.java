@@ -28,7 +28,7 @@ public class Shooter extends SubsystemBase {
     private final Controller controller;
     
     /** The setpoint that the controller will adjust the shooter RPM to. */
-    private Number setpoint;
+    private SmartNumber setpoint;
 
     /** The motor being controlled at a velocity. */
     private final Motor motor;
