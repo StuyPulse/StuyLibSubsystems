@@ -42,8 +42,14 @@ public class Shooter extends SubsystemBase {
         setpoint = new SmartNumber("Shooter/Setpoint (rpm)", 0.0);
     }
 
+    /** sets the target state (rpm) for the shooter */
+    public void setSpeed(double rpm) {
+        setpoint.set(rpm);
+    }
+
     @Override
     public void periodic() {
+        /** calculate output for the shooter motor */
         double output = controller.update(setpoint.doubleValue(), motor.getVelocity());
         motor.set(output);
     
