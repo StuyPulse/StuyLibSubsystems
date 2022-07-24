@@ -33,7 +33,7 @@ public class Elevator extends SubsystemBase {
     private final Controller controller;
 
     /** The setpoint that will control the position of the motor / height of the elevator */
-    private Number setpoint;
+    private SmartNumber setpoint;
 
     /** The motor being controlled by a target height. */
     private final Motor motor;
@@ -47,8 +47,14 @@ public class Elevator extends SubsystemBase {
         setpoint = new SmartNumber("Elevator/Setpoint (meters)", 0.0);
     }
 
+    /** set the target height of the elevator */
+    public void setHeight(double height) {
+        setpoint.set(height);
+    }
+
     @Override
     public void periodic() {
+        /** calculate output for the elevator motor */
         double output = controller.update(setpoint.doubleValue(), motor.getPosition());
         motor.set(output);
 
