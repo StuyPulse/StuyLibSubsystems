@@ -28,10 +28,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  */
 public class SwerveModule extends SubsystemBase {
 
+    /** the turn motor, target, and controller */
     private final Motor turnMotor;
     private final SmartAngle targetAngle;
     private final AngleController turnController;
 
+    /** the drive motor, target, and controller */
     private final Motor driveMotor;
     private final SmartNumber targetVelocity;
     private final Controller driveController;
@@ -49,6 +51,7 @@ public class SwerveModule extends SubsystemBase {
             .add(new Feedforward.Motor(0.1, 0.1, 0.1).velocity());
     }
 
+    /** set the target state of the swerve module */
     public void setTargetState(SwerveModuleState state) {
         state = SwerveModuleState.optimize(state, turnMotor.getAngle().getRotation2d());
         
@@ -58,14 +61,18 @@ public class SwerveModule extends SubsystemBase {
 
     @Override
     public void periodic() {
+        /** calculate output for turning motor */
         double turnOutput = turnController.update(targetAngle.get(), turnMotor.getAngle());
         turnMotor.set(turnOutput);
 
+        /** calculate output for drive motor */
         double driveOutput = driveController.update(targetVelocity.get(), driveMotor.getVelocity());
         driveMotor.set(driveOutput);
 
+        /** put measurements on the network */
         SmartDashboard.putNumber("Swerve Module/Measured Velocity", driveController.getMeasurement());
         SmartDashboard.putNumber("Swerve Module/Measured Angle", turnController.getMeasurement().toDegrees());
+        // NOTE: it is best to use getMeasurement() if any filters are applied
     }
 
 }
